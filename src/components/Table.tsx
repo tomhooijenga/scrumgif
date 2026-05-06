@@ -1,6 +1,7 @@
 import { useChannel } from 'ably/react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Card } from './Card.tsx';
 
 interface VoteEntry {
   card: string;
@@ -48,40 +49,7 @@ export function Table({ room }: { room: string }) {
                 className="flex flex-col items-center gap-2"
               >
                 {/* Card */}
-                <div
-                  className={[
-                    'h-30 rounded-lg border-2 border-indigo-600 flex items-center justify-center font-bold overflow-hidden relative select-none',
-                    'aspect-2.5/3.5',
-                    '[box-shadow:0px_0px_20px_rgba(79,70,229,0.4),3px_3px_8px_rgba(0,0,0,0.15)]',
-                    revealed
-                      ? gifUrl ? 'bg-transparent text-indigo-600' : 'bg-indigo-50 text-indigo-600'
-                      : gifUrl ? 'bg-transparent text-indigo-300' : 'bg-indigo-600 text-indigo-300',
-                    revealed && isNaN(Number(card)) ? 'text-base' : 'text-4xl',
-                  ].join(' ')}
-                >
-                  {revealed ? (
-                    <>
-                      {gifUrl && (
-                        <img
-                          src={gifUrl}
-                          alt={card}
-                          className="absolute inset-0 w-full h-full object-cover"
-                        />
-                      )}
-                      <span className={`absolute top-1.5 left-2 text-[0.6rem] ${gifUrl ? 'text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]' : 'text-indigo-300'}`}>{card}</span>
-                      <span className={`relative z-10 ${isNaN(Number(card)) ? 'text-base' : 'text-4xl'} ${gifUrl ? 'text-white [text-shadow:0_2px_6px_rgba(0,0,0,0.7)]' : 'text-indigo-600'}`}>{card}</span>
-                      <span className={`absolute bottom-1.5 right-2 text-[0.6rem] rotate-180 ${gifUrl ? 'text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]' : 'text-indigo-300'}`}>{card}</span>
-                    </>
-                  ) : gifUrl ? (
-                    <img
-                      src={gifUrl}
-                      alt={card}
-                      className="w-full h-full object-cover rounded-lg blur-sm scale-110"
-                    />
-                  ) : (
-                    <span className="text-4xl text-indigo-400">🂠</span>
-                  )}
-                </div>
+                <Card label={card} gifUrl={gifUrl} revealed={revealed} />
                 {/* Player name */}
                 <span className="text-xs text-gray-700 font-medium">{clientId}</span>
               </motion.div>

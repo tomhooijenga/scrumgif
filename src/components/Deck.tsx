@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {AnimatePresence, motion} from 'motion/react';
+import {Card} from "./Card.tsx";
 
 export const CARDS = [0, 1, 2, 3, 5, 8, 13, 20, 40, 'coffee', '?', '∞', 'break'];
 
@@ -30,17 +31,8 @@ export function CardPicker({
             whileHover={{y: -8, scale: 1.06, boxShadow: '0px 0px 20px rgba(79,70,229,0.3)'}}
             whileTap={{scale: 0.95, transition: {delay: 0}}}
             onClick={() => onSelectCard(c)}
-            className={[
-              'h-30 aspect-2.5/3.5 rounded-lg flex items-center justify-center font-bold text-indigo-600 cursor-pointer select-none relative',
-              typeof c === 'number' ? 'text-4xl' : 'text-base',
-              selectedCard === c
-                ? 'border-2 border-indigo-600 bg-indigo-50 [box-shadow:0px_0px_20px_rgba(79,70,229,0.4),3px_3px_8px_rgba(0,0,0,0.15)]'
-                : 'border border-indigo-600 bg-white [box-shadow:3px_3px_8px_rgba(0,0,0,0.15),-1px_-1px_4px_rgba(255,255,255,0.8)]',
-            ].join(' ')}
           >
-            <span className="absolute top-1.5 left-2 text-[0.6rem] text-indigo-300">{c}</span>
-            {c}
-            <span className="absolute bottom-1.5 right-2 text-[0.6rem] text-indigo-300 rotate-180">{c}</span>
+            <Card label={c} selected={selectedCard === c} revealed={false} className="cursor-pointer" />
           </motion.div>
         ))}
       </div>
