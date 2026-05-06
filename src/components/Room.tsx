@@ -2,19 +2,18 @@ import {ChannelProvider, useChannel} from "ably/react";
 import {useParams} from "react-router";
 import {Deck} from "./Deck.tsx";
 import {PresenceStatus} from "./PresenceStatus.tsx";
-
+import {Table} from "./Table.tsx";
 
 function RoomInner() {
   const params = useParams();
 
-  const channel = useChannel(params.room, (message) => {
-    console.log(message);
-  });
+  const channel = useChannel(params.room);
 
   return (
     <>
       <PresenceStatus room={params.room} />
-      <Deck onSelectCard={card => channel.publish('vote', (card))} />
+      <Table room={params.room} />
+      <Deck onSelectCard={(card, gifUrl) => channel.publish('vote', { card, gifUrl })} />
     </>
   )
 }

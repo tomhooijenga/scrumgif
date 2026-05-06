@@ -13,13 +13,16 @@ interface KlipyGif {
   url: string
 }
 
-export function Deck({ onSelectCard }: { onSelectCard: (card: string) => void }) {
+export function Deck({ onSelectCard }: { onSelectCard: (card: string, gifUrl: string) => void }) {
   const [card, setCard] = useState<(typeof CARDS)[number] | undefined>();
   const [fetchKey, setFetchKey] = useState(0);
   const [gifs, setGifs] = useState<KlipyGif[]>([]);
+  const [selectedGif, setSelectedGif] = useState<KlipyGif | undefined>();
 
   useEffect(() => {
     if (card === undefined) return;
+    setSelectedGif(undefined);
+
     const query = String(card);
     const controller = new AbortController();
 
@@ -47,7 +50,6 @@ export function Deck({ onSelectCard }: { onSelectCard: (card: string) => void })
             onClick={() => {
               setCard(c);
               setFetchKey(k => k + 1);
-              onSelectCard(String(c));
             }}
             style={{
               aspectRatio: '2.5/3.5',
@@ -94,9 +96,12 @@ export function Deck({ onSelectCard }: { onSelectCard: (card: string) => void })
             transition={{type: 'spring', stiffness: 260, damping: 20}}
             style={{marginTop: '32px'}}
           >
-            <h3 style={{color: '#4f46e5', marginBottom: '12px', fontFamily: SYSTEM_FONT}}>
-              GIFs for "{card}"
+            <h3 style={{color: '#4f46e5', marginBottom: '4px', fontFamily: SYSTEM_FONT}}>
+              Pick a GIF for "{card}"
             </h3>
+            <p style={{color: '#6b7280', fontSize: '0.85rem', marginBottom: '12px'}}>
+              Click a GIF to confirm your vote.
+            </p>
             <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap'}}>
               {gifs.map((gif) => (
                 <motion.div
@@ -104,7 +109,23 @@ export function Deck({ onSelectCard }: { onSelectCard: (card: string) => void })
                   initial={{opacity: 0, scale: 0.9}}
                   animate={{opacity: 1, scale: 1}}
                   transition={{type: 'spring', stiffness: 260, damping: 20}}
-                  style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px'}}
+                  whileHover={{scale: 1.04, boxShadow: '0px 0px 16px rgba(79,70,229,0.4)'}}
+                  whileTap={{scale: 0.96}}
+                  onClick={() => {
+                    setSelectedGif(gif);
+                    onSelectCard(String(card), gif.url);
+                  }}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: 'pointer',
+                    borderRadius: '10px',
+                    border: selectedGif?.id === gif.id ? '2px solid #4f46e5' : '2px solid transparent',
+                    padding: '4px',
+                    background: selectedGif?.id === gif.id ? '#eef2ff' : 'transparent',
+                  }}
                 >
                   <img
                     src={gif.url}
