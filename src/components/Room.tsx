@@ -6,18 +6,18 @@ import {CARDS, GifPicker, type KlipyGif} from "./GifPicker.tsx";
 import {CardPicker} from "./CardPicker.tsx";
 
 function RoomInner() {
-  const params = useParams();
+  const { room = '' } = useParams();
   const [selectedCard, setSelectedCard] = useState<(typeof CARDS)[number] | undefined>();
   const [selectedGif, setSelectedGif] = useState<KlipyGif | undefined>();
 
-  const channel = useChannel(params.room);
+  const channel = useChannel(room);
 
-  useChannel(params.room, 'reset', () => {
+  useChannel(room, 'reset', () => {
     setSelectedCard(undefined);
     setSelectedGif(undefined);
   });
 
-  usePresence(params.room, {status: localStorage.name});
+  usePresence(room, {status: localStorage.name});
 
   return (
     <div className="flex flex-col h-screen">
@@ -53,20 +53,20 @@ function RoomInner() {
         }}
       />
 
-      <Table room={params.room}/>
+      <Table room={room}/>
     </div>
   )
 }
 
 export function Room() {
-  const params = useParams();
+  const { room = '' } = useParams();
 
   if (!localStorage.getItem("playerName")) {
-    return <Navigate to={`/name?redirect=/room/${params.room}`} replace/>;
+    return <Navigate to={`/name?redirect=/room/${room}`} replace/>;
   }
 
   return (
-    <ChannelProvider channelName={params.room}>
+    <ChannelProvider channelName={room}>
       <RoomInner/>
     </ChannelProvider>
   )
