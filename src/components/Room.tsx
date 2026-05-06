@@ -1,4 +1,4 @@
-import {ChannelProvider, useChannel} from "ably/react";
+import {ChannelProvider, useChannel, usePresence} from "ably/react";
 import {useParams} from "react-router";
 import {CardPicker, GifPicker, type KlipyGif, CARDS} from "./Deck.tsx";
 import {Table} from "./Table.tsx";
@@ -15,6 +15,8 @@ function RoomInner() {
     setSelectedCard(undefined);
     setSelectedGif(undefined);
   });
+
+  usePresence(params.room, { status: localStorage.name });
 
   return (
     <div className="flex flex-col h-screen">

@@ -1,4 +1,4 @@
-import { useChannel } from 'ably/react';
+import { useChannel, usePresenceListener } from 'ably/react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Card } from './Card.tsx';
@@ -11,6 +11,11 @@ interface VoteEntry {
 export function Table({ room }: { room: string }) {
   const [votes, setVotes] = useState<Record<string, VoteEntry>>({});
   const [revealed, setRevealed] = useState(false);
+
+  const { presenceData } = usePresenceListener(room);
+  const nameMap = Object.fromEntries(
+    presenceData.map(m => [m.clientId, m.data?.status as string | undefined])
+  );
 
   useChannel(room, 'vote', (message) => {
     const clientId = message.clientId ?? 'Unknown';
@@ -48,10 +53,8 @@ export function Table({ room }: { room: string }) {
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                 className="flex flex-col items-center gap-2"
               >
-                {/* Card */}
                 <Card label={card} gifUrl={gifUrl} revealed={revealed} />
-                {/* Player name */}
-                <span className="text-xs text-gray-700 font-medium">{clientId}</span>
+                <span className="text-xs text-gray-700 font-medium">{nameMap[clientId]}</span>
               </motion.div>
             ))}
           </AnimatePresence>
