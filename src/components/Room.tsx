@@ -1,5 +1,3 @@
-import {AnimatePresence, motion} from 'motion/react';
-import {useEffect, useState} from "react";
 import {ChannelProvider, useChannel} from "ably/react";
 import {useParams} from "react-router";
 import {Deck} from "./Deck.tsx";
