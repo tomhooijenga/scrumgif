@@ -1,8 +1,9 @@
 import {ChannelProvider, useChannel, usePresence} from "ably/react";
-import {useParams} from "react-router";
-import {CardPicker, GifPicker, type KlipyGif, CARDS} from "./Deck.tsx";
+import {Navigate, useParams} from "react-router";
 import {Table} from "./Table.tsx";
 import {useState} from "react";
+import {CARDS, GifPicker, type KlipyGif} from "./GifPicker.tsx";
+import {CardPicker} from "./CardPicker.tsx";
 
 function RoomInner() {
   const params = useParams();
@@ -59,6 +60,10 @@ function RoomInner() {
 
 export function Room() {
   const params = useParams();
+
+  if (!localStorage.getItem("playerName")) {
+    return <Navigate to={`/name?redirect=/room/${params.room}`} replace />;
+  }
 
   return (
     <ChannelProvider channelName={params.room}>
