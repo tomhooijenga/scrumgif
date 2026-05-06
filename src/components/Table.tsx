@@ -7,8 +7,6 @@ interface VoteEntry {
   gifUrl?: string;
 }
 
-const SYSTEM_FONT = '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, Adwaita Sans, Cantarell, Ubuntu, roboto, noto, helvetica, arial, sans-serif';
-
 export function Table({ room }: { room: string }) {
   const [votes, setVotes] = useState<Record<string, VoteEntry>>({});
   const [revealed, setRevealed] = useState(false);
@@ -31,14 +29,14 @@ export function Table({ room }: { room: string }) {
   const entries = Object.entries(votes) as [string, VoteEntry][];
 
   return (
-    <div style={{ padding: '24px', fontFamily: SYSTEM_FONT }}>
-      <h2 style={{ color: '#4f46e5', marginBottom: '16px', fontSize: '1.25rem', fontWeight: 'bold' }}>
+    <div className="p-6">
+      <h2 className="text-indigo-600 mb-4 text-xl font-bold">
         Votes
       </h2>
       {entries.length === 0 ? (
-        <p style={{ color: '#6b7280' }}>No votes yet. Waiting for players…</p>
+        <p className="text-gray-500">No votes yet. Waiting for players…</p>
       ) : (
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+        <div className="flex gap-4 flex-wrap">
           <AnimatePresence>
             {entries.map(([clientId, { card, gifUrl }]) => (
               <motion.div
@@ -47,27 +45,19 @@ export function Table({ room }: { room: string }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}
+                className="flex flex-col items-center gap-2"
               >
                 {/* Card */}
                 <div
-                  style={{
-                    aspectRatio: '2.5/3.5',
-                    height: '120px',
-                    borderRadius: '10px',
-                    border: '2px solid #4f46e5',
-                    boxShadow: '0px 0px 20px rgba(79,70,229,0.4), 3px 3px 8px rgba(0,0,0,0.15)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: revealed && isNaN(Number(card)) ? '1rem' : '2rem',
-                    fontWeight: 'bold',
-                    color: revealed ? '#4f46e5' : '#a5b4fc',
-                    background: revealed ? (gifUrl ? 'transparent' : '#eef2ff') : (!gifUrl ? '#4f46e5' : 'transparent'),
-                    overflow: 'hidden',
-                    position: 'relative',
-                    userSelect: 'none',
-                  }}
+                  className={[
+                    'h-30 rounded-lg border-2 border-indigo-600 flex items-center justify-center font-bold overflow-hidden relative select-none',
+                    'aspect-2.5/3.5',
+                    '[box-shadow:0px_0px_20px_rgba(79,70,229,0.4),3px_3px_8px_rgba(0,0,0,0.15)]',
+                    revealed
+                      ? gifUrl ? 'bg-transparent text-indigo-600' : 'bg-indigo-50 text-indigo-600'
+                      : gifUrl ? 'bg-transparent text-indigo-300' : 'bg-indigo-600 text-indigo-300',
+                    revealed && isNaN(Number(card)) ? 'text-base' : 'text-4xl',
+                  ].join(' ')}
                 >
                   {revealed ? (
                     <>
@@ -75,25 +65,25 @@ export function Table({ room }: { room: string }) {
                         <img
                           src={gifUrl}
                           alt={card}
-                          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                          className="absolute inset-0 w-full h-full object-cover"
                         />
                       )}
-                      <span style={{ position: 'absolute', top: '6px', left: '8px', fontSize: '0.6rem', color: gifUrl ? 'white' : '#a5b4fc', textShadow: gifUrl ? '0 1px 3px rgba(0,0,0,0.8)' : undefined }}>{card}</span>
-                      <span style={{ position: 'relative', zIndex: 1, fontSize: isNaN(Number(card)) ? '1rem' : '2rem', color: gifUrl ? 'white' : '#4f46e5', textShadow: gifUrl ? '0 2px 6px rgba(0,0,0,0.7)' : undefined }}>{card}</span>
-                      <span style={{ position: 'absolute', bottom: '6px', right: '8px', fontSize: '0.6rem', color: gifUrl ? 'white' : '#a5b4fc', textShadow: gifUrl ? '0 1px 3px rgba(0,0,0,0.8)' : undefined, transform: 'rotate(180deg)' }}>{card}</span>
+                      <span className={`absolute top-1.5 left-2 text-[0.6rem] ${gifUrl ? 'text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]' : 'text-indigo-300'}`}>{card}</span>
+                      <span className={`relative z-10 ${isNaN(Number(card)) ? 'text-base' : 'text-4xl'} ${gifUrl ? 'text-white [text-shadow:0_2px_6px_rgba(0,0,0,0.7)]' : 'text-indigo-600'}`}>{card}</span>
+                      <span className={`absolute bottom-1.5 right-2 text-[0.6rem] rotate-180 ${gifUrl ? 'text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]' : 'text-indigo-300'}`}>{card}</span>
                     </>
                   ) : gifUrl ? (
                     <img
                       src={gifUrl}
                       alt={card}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', filter: 'blur(8px)', transform: 'scale(1.1)' }}
+                      className="w-full h-full object-cover rounded-lg blur-sm scale-110"
                     />
                   ) : (
-                    <span style={{ fontSize: '2rem', color: '#818cf8' }}>🂠</span>
+                    <span className="text-4xl text-indigo-400">🂠</span>
                   )}
                 </div>
                 {/* Player name */}
-                <span style={{ fontSize: '0.8rem', color: '#374151', fontWeight: 500 }}>{clientId}</span>
+                <span className="text-xs text-gray-700 font-medium">{clientId}</span>
               </motion.div>
             ))}
           </AnimatePresence>

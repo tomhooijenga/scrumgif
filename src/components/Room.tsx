@@ -16,28 +16,18 @@ function RoomInner() {
     setSelectedGif(undefined);
   });
 
-  const buttonStyle = {
-    padding: '10px 28px',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '1rem',
-    fontWeight: 'bold' as const,
-    cursor: 'pointer',
-  };
-
   return (
-    <div className="flex flex-col" style={{height: '100vh'}}>
-      <div style={{ display: 'flex', gap: '12px', margin: '0 24px 16px' }}>
+    <div className="flex flex-col h-screen">
+      <div className="flex gap-3 mx-6 mb-4">
         <button
           onClick={() => channel.publish('reveal', null)}
-          style={{ ...buttonStyle, background: '#4f46e5', boxShadow: '0px 4px 12px rgba(79,70,229,0.4)' }}
+          className="px-7 py-2.5 text-white bg-indigo-600 rounded-lg text-base font-bold cursor-pointer border-none [box-shadow:0px_4px_12px_rgba(79,70,229,0.4)]"
         >
           Reveal cards
         </button>
         <button
           onClick={() => channel.publish('reset', null)}
-          style={{ ...buttonStyle, background: '#6b7280', boxShadow: '0px 4px 12px rgba(0,0,0,0.2)' }}
+          className="px-7 py-2.5 text-white bg-gray-500 rounded-lg text-base font-bold cursor-pointer border-none [box-shadow:0px_4px_12px_rgba(0,0,0,0.2)]"
         >
           Reset
         </button>
