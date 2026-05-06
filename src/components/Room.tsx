@@ -1,18 +1,19 @@
 import {ChannelProvider, useChannel} from "ably/react";
 import {useParams} from "react-router";
-import {Deck} from "./Deck.tsx";
-import {PresenceStatus} from "./PresenceStatus.tsx";
+import {CardPicker, GifPicker, type KlipyGif, CARDS} from "./Deck.tsx";
 import {Table} from "./Table.tsx";
 import {useState} from "react";
 
 function RoomInner() {
   const params = useParams();
-  const [deckKey, setDeckKey] = useState(0);
+  const [selectedCard, setSelectedCard] = useState<(typeof CARDS)[number] | undefined>();
+  const [selectedGif, setSelectedGif] = useState<KlipyGif | undefined>();
 
   const channel = useChannel(params.room);
 
   useChannel(params.room, 'reset', () => {
-    setDeckKey(k => k + 1);
+    setSelectedCard(undefined);
+    setSelectedGif(undefined);
   });
 
   const buttonStyle = {
@@ -26,9 +27,7 @@ function RoomInner() {
   };
 
   return (
-    <>
-      <PresenceStatus room={params.room} />
-      <Table room={params.room} />
+    <div className="flex flex-col" style={{height: '100vh'}}>
       <div style={{ display: 'flex', gap: '12px', margin: '0 24px 16px' }}>
         <button
           onClick={() => channel.publish('reveal', null)}
@@ -43,8 +42,26 @@ function RoomInner() {
           Reset
         </button>
       </div>
-      <Deck key={deckKey} onSelectCard={(card, gifUrl) => channel.publish('vote', { card, gifUrl })} />
-    </>
+
+      <CardPicker
+        selectedCard={selectedCard}
+        onSelectCard={(card) => {
+          setSelectedCard(card);
+          setSelectedGif(undefined);
+        }}
+      />
+
+      <GifPicker
+        card={selectedCard}
+        selectedGif={selectedGif}
+        onSelectGif={(gif) => {
+          setSelectedGif(gif);
+          channel.publish('vote', { card: String(selectedCard), gifUrl: gif.url });
+        }}
+      />
+
+      <Table room={params.room} />
+    </div>
   )
 }
 
