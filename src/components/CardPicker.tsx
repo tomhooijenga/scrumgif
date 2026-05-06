@@ -22,7 +22,7 @@ export function CardPicker({
             whileTap={{scale: 0.95, transition: {delay: 0}}}
             onClick={() => onSelectCard(c)}
           >
-            <Card label={c} selected={selectedCard === c} className="cursor-pointer" />
+            <Card label={c} selected={selectedCard === c} className="cursor-pointer"/>
           </motion.div>
         ))}
       </div>

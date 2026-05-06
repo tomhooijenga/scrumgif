@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef } from 'react';
+import {type ComponentPropsWithoutRef} from 'react';
 
 interface CardProps extends ComponentPropsWithoutRef<'div'> {
   /** The label/value shown on the card */
@@ -11,7 +11,7 @@ interface CardProps extends ComponentPropsWithoutRef<'div'> {
   selected?: boolean;
 }
 
-export function Card({ label, gifUrl, revealed = true, selected, className, ...rest }: CardProps) {
+export function Card({label, gifUrl, revealed = true, selected, className, ...rest}: CardProps) {
   const isText = isNaN(Number(label));
 
   const bg = revealed
@@ -49,13 +49,16 @@ export function Card({ label, gifUrl, revealed = true, selected, className, ...r
               className="absolute inset-0 w-full h-full object-cover"
             />
           )}
-          <span className={`absolute top-1.5 left-2 text-[0.6rem] ${gifUrl ? 'text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]' : 'text-indigo-300'}`}>
+          <span
+            className={`absolute top-1.5 left-2 text-[0.6rem] ${gifUrl ? 'text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]' : 'text-indigo-300'}`}>
             {label}
           </span>
-          <span className={`relative z-10 ${isText ? 'text-base' : 'text-4xl'} ${gifUrl ? 'text-white [text-shadow:0_2px_6px_rgba(0,0,0,0.7)]' : 'text-indigo-600'}`}>
+          <span
+            className={`relative z-10 ${isText ? 'text-base' : 'text-4xl'} ${gifUrl ? 'text-white [text-shadow:0_2px_6px_rgba(0,0,0,0.7)]' : 'text-indigo-600'}`}>
             {label}
           </span>
-          <span className={`absolute bottom-1.5 right-2 text-[0.6rem] rotate-180 ${gifUrl ? 'text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]' : 'text-indigo-300'}`}>
+          <span
+            className={`absolute bottom-1.5 right-2 text-[0.6rem] rotate-180 ${gifUrl ? 'text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]' : 'text-indigo-300'}`}>
             {label}
           </span>
         </>

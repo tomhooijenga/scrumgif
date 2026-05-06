@@ -32,7 +32,9 @@ export function GifPicker({
     fetch(`https://api.klipy.com/v2/search?key=${KLIPY_API_KEY}&q=${encodeURIComponent(query)}&random=true&limit=8`, {signal: controller.signal})
       .then(res => res.json())
       .then(data => setGifs(data.results))
-      .catch(err => { if ((err as Error).name !== 'AbortError') console.error(err); });
+      .catch(err => {
+        if ((err as Error).name !== 'AbortError') console.error(err);
+      });
     return () => controller.abort();
   }, [card, fetchKey]);
 
@@ -68,9 +70,10 @@ export function GifPicker({
                   src={gif.url}
                   alt={gif.title ?? String(card)}
                   className="h-40 rounded-lg object-cover"
-                  style={{ aspectRatio: `${(gif as any).media_formats?.gif?.dims[0]} / ${(gif as any).media_formats?.gif?.dims[1]}` }}
+                  style={{aspectRatio: `${(gif as any).media_formats?.gif?.dims[0]} / ${(gif as any).media_formats?.gif?.dims[1]}`}}
                 />
-                <span className="text-xs text-gray-500 text-center max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                <span
+                  className="text-xs text-gray-500 text-center max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
                   {gif.title}
                 </span>
               </motion.div>

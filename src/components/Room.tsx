@@ -17,7 +17,7 @@ function RoomInner() {
     setSelectedGif(undefined);
   });
 
-  usePresence(params.room, { status: localStorage.name });
+  usePresence(params.room, {status: localStorage.name});
 
   return (
     <div className="flex flex-col h-screen">
@@ -49,11 +49,11 @@ function RoomInner() {
         selectedGif={selectedGif}
         onSelectGif={(gif) => {
           setSelectedGif(gif);
-          channel.publish('vote', { card: String(selectedCard), gifUrl: gif.url });
+          channel.publish('vote', {card: String(selectedCard), gifUrl: gif.url});
         }}
       />
 
-      <Table room={params.room} />
+      <Table room={params.room}/>
     </div>
   )
 }
@@ -62,12 +62,12 @@ export function Room() {
   const params = useParams();
 
   if (!localStorage.getItem("playerName")) {
-    return <Navigate to={`/name?redirect=/room/${params.room}`} replace />;
+    return <Navigate to={`/name?redirect=/room/${params.room}`} replace/>;
   }
 
   return (
     <ChannelProvider channelName={params.room}>
-      <RoomInner />
+      <RoomInner/>
     </ChannelProvider>
   )
 }

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import {useState} from "react";
+import {useNavigate, useSearchParams} from "react-router";
 
 export function NameEntry() {
   const [name, setName] = useState(() => localStorage.getItem("playerName") || "");
