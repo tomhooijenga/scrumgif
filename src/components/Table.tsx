@@ -23,6 +23,11 @@ export function Table({ room }: { room: string }) {
     setRevealed(true);
   });
 
+  useChannel(room, 'reset', () => {
+    setVotes({});
+    setRevealed(false);
+  });
+
   const entries = Object.entries(votes) as [string, VoteEntry][];
 
   return (
@@ -58,7 +63,7 @@ export function Table({ room }: { room: string }) {
                     fontSize: revealed && isNaN(Number(card)) ? '1rem' : '2rem',
                     fontWeight: 'bold',
                     color: revealed ? '#4f46e5' : '#a5b4fc',
-                    background: revealed ? '#eef2ff' : (!gifUrl ? '#4f46e5' : 'transparent'),
+                    background: revealed ? (gifUrl ? 'transparent' : '#eef2ff') : (!gifUrl ? '#4f46e5' : 'transparent'),
                     overflow: 'hidden',
                     position: 'relative',
                     userSelect: 'none',
@@ -66,15 +71,22 @@ export function Table({ room }: { room: string }) {
                 >
                   {revealed ? (
                     <>
-                      <span style={{ position: 'absolute', top: '6px', left: '8px', fontSize: '0.6rem', color: '#a5b4fc' }}>{card}</span>
-                      {card}
-                      <span style={{ position: 'absolute', bottom: '6px', right: '8px', fontSize: '0.6rem', color: '#a5b4fc', transform: 'rotate(180deg)' }}>{card}</span>
+                      {gifUrl && (
+                        <img
+                          src={gifUrl}
+                          alt={card}
+                          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      )}
+                      <span style={{ position: 'absolute', top: '6px', left: '8px', fontSize: '0.6rem', color: gifUrl ? 'white' : '#a5b4fc', textShadow: gifUrl ? '0 1px 3px rgba(0,0,0,0.8)' : undefined }}>{card}</span>
+                      <span style={{ position: 'relative', zIndex: 1, fontSize: isNaN(Number(card)) ? '1rem' : '2rem', color: gifUrl ? 'white' : '#4f46e5', textShadow: gifUrl ? '0 2px 6px rgba(0,0,0,0.7)' : undefined }}>{card}</span>
+                      <span style={{ position: 'absolute', bottom: '6px', right: '8px', fontSize: '0.6rem', color: gifUrl ? 'white' : '#a5b4fc', textShadow: gifUrl ? '0 1px 3px rgba(0,0,0,0.8)' : undefined, transform: 'rotate(180deg)' }}>{card}</span>
                     </>
                   ) : gifUrl ? (
                     <img
                       src={gifUrl}
                       alt={card}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', filter: 'blur(8px)', transform: 'scale(1.1)' }}
                     />
                   ) : (
                     <span style={{ fontSize: '2rem', color: '#818cf8' }}>🂠</span>
