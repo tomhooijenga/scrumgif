@@ -8,7 +8,7 @@ import client from "./ably.ts";
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AblyProvider client={client}>
-      <BrowserRouter>
+      <BrowserRouter basename={process.env.NODE_ENV === 'production' ? 'scrumgif' : '/'}>
         <App/>
       </BrowserRouter>
     </AblyProvider>
