@@ -1,4 +1,4 @@
-import Room from "./components/Room.tsx";
+import { Room } from "./components/Room.tsx";
 import {Route, Routes} from "react-router";
 
 function App() {
@@ -9,6 +9,5 @@ function App() {
   )
 }
 
-// todo: use ably
 
 export default App;
