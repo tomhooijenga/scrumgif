@@ -31,7 +31,7 @@ export function Card({ label, gifUrl, revealed = true, selected, className, ...r
   return (
     <div
       className={[
-        'h-[120px] aspect-[2.5/3.5] rounded-[10px] flex items-center justify-center font-bold overflow-hidden relative select-none',
+        'h-30 aspect-2.5/3.5 rounded-[10px] flex items-center justify-center font-bold overflow-hidden relative select-none',
         isText ? 'text-base' : 'text-4xl',
         textColor,
         bg,
@@ -63,7 +63,7 @@ export function Card({ label, gifUrl, revealed = true, selected, className, ...r
         <img
           src={gifUrl}
           alt={String(label)}
-          className="w-full h-full object-cover rounded-lg blur-sm scale-110"
+          className="w-full h-full object-cover rounded-lg blur-md scale-110"
         />
       ) : (
         <span className="text-4xl text-indigo-400">🂠</span>
