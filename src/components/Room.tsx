@@ -26,7 +26,6 @@ export default function Room() {
     fetch(`https://api.klipy.com/v2/search?key=${KLIPY_API_KEY}&q=${encodeURIComponent(query)}&random=true&limit=8`, {signal: controller.signal})
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         setGifs(data.results);
       })
       .catch(err => {
