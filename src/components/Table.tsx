@@ -80,7 +80,7 @@ export function Table({room}: { room: string }) {
   const entries = Object.entries(votes) as [string, VoteEntry][];
 
   return (
-    <div className="p-6">
+    <motion.div layout className="p-6">
       <h2 className="text-indigo-600 mb-4 text-xl font-bold">
         Votes
       </h2>
@@ -105,7 +105,7 @@ export function Table({room}: { room: string }) {
           </AnimatePresence>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

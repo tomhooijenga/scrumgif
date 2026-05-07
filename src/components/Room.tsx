@@ -6,11 +6,13 @@ import {GifPicker} from "./GifPicker.tsx";
 import {CardPicker} from "./CardPicker.tsx";
 import type {Card} from "../types/Card.ts";
 import type {KlipyGif} from "../types/KlipyResponse.ts";
+import {AnimatePresence, LayoutGroup} from "motion/react";
 
 function RoomInner() {
-  const { room = '' } = useParams();
+  const {room = ''} = useParams();
   const [selectedCard, setSelectedCard] = useState<Card | undefined>();
   const [selectedGif, setSelectedGif] = useState<KlipyGif | undefined>();
+  const [showGifPicker, setShowGifPicker] = useState(false);
   const [fetchKey, setFetchKey] = useState(0);
 
   const channel = useChannel(room);
@@ -18,6 +20,7 @@ function RoomInner() {
   useChannel(room, 'reset', () => {
     setSelectedCard(undefined);
     setSelectedGif(undefined);
+    setShowGifPicker(false);
   });
 
   usePresence(room, {status: localStorage.name});
@@ -25,11 +28,13 @@ function RoomInner() {
   function selectCard(card: Card) {
     setSelectedCard(card);
     setSelectedGif(undefined);
+    setShowGifPicker(true);
     setFetchKey(k => k + 1);
   }
 
   function selectGif(gif: KlipyGif) {
     setSelectedGif(gif);
+    setShowGifPicker(false);
     channel.publish('vote', {
       card: selectedCard,
       gif: gif.file.sm.gif
@@ -58,20 +63,23 @@ function RoomInner() {
         onSelectCard={selectCard}
       />
 
-      <GifPicker
-        card={selectedCard}
-        fetchKey={fetchKey}
-        selectedGif={selectedGif}
-        onSelectGif={selectGif}
-      />
-
-      <Table room={room}/>
+      <LayoutGroup>
+        <AnimatePresence>
+          {showGifPicker && <GifPicker
+              card={selectedCard}
+              fetchKey={fetchKey}
+              selectedGif={selectedGif}
+              onSelectGif={selectGif}
+          />}
+        </AnimatePresence>
+        <Table room={room}/>
+      </LayoutGroup>
     </div>
   )
 }
 
 export function Room() {
-  const { room = '' } = useParams();
+  const {room = ''} = useParams();
 
   if (!localStorage.getItem("name")) {
     return <Navigate to={`/name?redirect=/room/${room}`} replace/>;
