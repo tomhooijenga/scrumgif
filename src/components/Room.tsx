@@ -2,12 +2,14 @@ import {ChannelProvider, useChannel, usePresence} from "ably/react";
 import {Navigate, useParams} from "react-router";
 import {Table} from "./Table.tsx";
 import {useState} from "react";
-import {CARDS, GifPicker, type KlipyGif} from "./GifPicker.tsx";
+import {GifPicker} from "./GifPicker.tsx";
 import {CardPicker} from "./CardPicker.tsx";
+import type {Card} from "../types/Card.ts";
+import type {KlipyGif} from "../types/KlipyResponse.ts";
 
 function RoomInner() {
   const { room = '' } = useParams();
-  const [selectedCard, setSelectedCard] = useState<(typeof CARDS)[number] | undefined>();
+  const [selectedCard, setSelectedCard] = useState<Card | undefined>();
   const [selectedGif, setSelectedGif] = useState<KlipyGif | undefined>();
 
   const channel = useChannel(room);

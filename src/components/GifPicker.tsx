@@ -1,23 +1,14 @@
 import {useEffect, useState} from "react";
 import {AnimatePresence, motion} from 'motion/react';
-
-export const CARDS = [0, 1, 2, 3, 5, 8, 13, 20, 40, 'coffee', '?', '∞', 'break'];
-
-const KLIPY_API_KEY = 'T2rXbk8t12Yhkz8xtVcyV3sdI2rqXCjRyJPVaH6sAWB74vA84fNS6DGRSL7PPGkw';
-
-export interface KlipyGif {
-  id: string;
-  title: string;
-  url: string;
-}
-
+import type {Card} from "../types/Card.ts";
+import type {KlipyResponse, KlipyGif} from "../types/KlipyResponse.ts";
 
 export function GifPicker({
                             card,
                             selectedGif,
                             onSelectGif,
                           }: {
-  card: (typeof CARDS)[number] | undefined;
+  card: Card | undefined;
   selectedGif: KlipyGif | undefined;
   onSelectGif: (gif: KlipyGif) => void;
 }) {
@@ -29,8 +20,8 @@ export function GifPicker({
     setGifs([]);
     const query = String(card);
     const controller = new AbortController();
-    fetch(`https://api.klipy.com/v2/search?key=${KLIPY_API_KEY}&q=${encodeURIComponent(query)}&random=true&limit=8`, {signal: controller.signal})
-      .then(res => res.json())
+    fetch(`https://api.klipy.com/v2/search?key=${import.meta.env.VITE_KLIPY_API_KEY}&q=${encodeURIComponent(query)}&random=true&limit=8`, {signal: controller.signal})
+      .then(res => res.json() as unknown as KlipyResponse)
       .then(data => setGifs(data.results))
       .catch(err => {
         if ((err as Error).name !== 'AbortError') console.error(err);
@@ -70,7 +61,7 @@ export function GifPicker({
                   src={gif.url}
                   alt={gif.title ?? String(card)}
                   className="h-40 rounded-lg object-cover"
-                  style={{aspectRatio: `${(gif as any).media_formats?.gif?.dims[0]} / ${(gif as any).media_formats?.gif?.dims[1]}`}}
+                  style={{aspectRatio: `${(gif).media_formats?.gif?.dims[0]} / ${(gif).media_formats?.gif?.dims[1]}`}}
                 />
                 <span
                   className="text-xs text-gray-500 text-center max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
