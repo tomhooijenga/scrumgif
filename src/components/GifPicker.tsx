@@ -57,7 +57,7 @@ export function GifPicker({
             whileTap={{scale: 0.96}}
             onClick={() => onSelectGif(gif)}
             className={[
-              'flex flex-col items-center gap-1.5 cursor-pointer rounded-[10px] border-2 p-1',
+              'flex flex-col items-center gap-1.5 cursor-pointer rounded-lg border-2 p-1',
               selectedGif?.id === gif.id ? 'border-indigo-600 bg-indigo-50' : 'border-transparent bg-transparent',
             ].join(' ')}
           >

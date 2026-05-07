@@ -31,7 +31,7 @@ export function Card({label, gifUrl, revealed = true, selected, className, ...re
   return (
     <div
       className={[
-        'h-30 aspect-2.5/3.5 rounded-[10px] flex items-center justify-center font-bold overflow-hidden relative select-none',
+        'h-30 aspect-2.5/3.5 rounded-lg flex items-center justify-center font-bold overflow-hidden relative select-none',
         isText ? 'text-base' : 'text-4xl',
         textColor,
         bg,

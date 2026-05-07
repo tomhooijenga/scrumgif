@@ -5,6 +5,7 @@ import {Card} from './Card.tsx';
 import type * as Ably from 'ably';
 import type {Card as CardType} from "../types/Card.ts";
 import type {KlipyFile} from "../types/KlipyResponse.ts";
+import {CardPlaceholder} from "./CardPlaceholder.tsx";
 
 interface VoteEntry {
   card: CardType;
@@ -30,10 +31,7 @@ export function Table({room}: { room: string }) {
   const [revealed, setRevealed] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
 
-  const {presenceData} = usePresenceListener(room);
-  const nameMap = Object.fromEntries(
-    presenceData.map(m => [m.clientId, m.data?.status as string | undefined])
-  );
+  const {presenceData: players} = usePresenceListener<{ name: string }>(room);
 
   const {channel} = useChannel(room, 'vote', (message) => {
     if (!historyLoaded) return; // history replay will handle this
@@ -77,19 +75,16 @@ export function Table({room}: { room: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const entries = Object.entries(votes) as [string, VoteEntry][];
-
   return (
     <motion.div layout className="p-6">
       <h2 className="text-indigo-600 mb-4 text-xl font-bold">
         Votes
       </h2>
-      {entries.length === 0 ? (
-        <p className="text-gray-500">No votes yet. Waiting for players…</p>
-      ) : (
-        <div className="flex gap-4 flex-wrap">
-          <AnimatePresence>
-            {entries.map(([clientId, {card, gif}]) => (
+      <div className="grid gap-0" style={{gridTemplateColumns: `repeat(${players.length}, 1fr)`}}>
+        <AnimatePresence>
+          {players.map(({clientId, data}) => {
+            const vote = votes[clientId];
+            return (
               <motion.div
                 key={clientId}
                 initial={{opacity: 0, y: 20}}
@@ -98,13 +93,16 @@ export function Table({room}: { room: string }) {
                 transition={{type: 'spring', stiffness: 260, damping: 20}}
                 className="flex flex-col items-center gap-2"
               >
-                <Card label={card} gifUrl={gif.url} revealed={revealed}/>
-                <span className="text-xs text-gray-700 font-medium">{nameMap[clientId]}</span>
+                {vote
+                  ? <Card label={vote.card} gifUrl={vote.gif.url} revealed={revealed}/>
+                  : <CardPlaceholder className={'h-30'}/>
+                }
+                <span className="text-xs text-gray-700 font-medium">{data.name}</span>
               </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      )}
+            );
+          })}
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 }
