@@ -3,26 +3,32 @@ import {AnimatePresence, motion} from 'motion/react';
 import type {Card} from "../types/Card.ts";
 import type {KlipyResponse, KlipyGif} from "../types/KlipyResponse.ts";
 
+function getRandomPage() {
+  const max = 200;
+  const min = 0;
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 export function GifPicker({
                             card,
+  fetchKey,
                             selectedGif,
                             onSelectGif,
                           }: {
   card: Card | undefined;
+  fetchKey: number;
   selectedGif: KlipyGif | undefined;
   onSelectGif: (gif: KlipyGif) => void;
 }) {
-  const [fetchKey] = useState(0);
   const [gifs, setGifs] = useState<KlipyGif[]>([]);
 
   useEffect(() => {
     if (card === undefined) return;
     setGifs([]);
-    const query = String(card);
     const controller = new AbortController();
-    fetch(`https://api.klipy.com/v2/search?key=${import.meta.env.VITE_KLIPY_API_KEY}&q=${encodeURIComponent(query)}&random=true&limit=8`, {signal: controller.signal})
+    fetch(`https://api.klipy.com/api/v1/${import.meta.env.VITE_KLIPY_API_KEY}/gifs/search?q=${encodeURIComponent(card)}&per_page=8&page=${getRandomPage()}`, {signal: controller.signal})
       .then(res => res.json() as unknown as KlipyResponse)
-      .then(data => setGifs(data.results))
+      .then(data => setGifs(data.data.data))
       .catch(err => {
         if ((err as Error).name !== 'AbortError') console.error(err);
       });
@@ -58,13 +64,13 @@ export function GifPicker({
                 ].join(' ')}
               >
                 <img
-                  src={gif.url}
+                  src={gif.file.sm.gif.url}
                   alt={gif.title ?? String(card)}
-                  className="h-40 rounded-lg object-cover"
-                  style={{aspectRatio: `${(gif).media_formats?.gif?.dims[0]} / ${(gif).media_formats?.gif?.dims[1]}`}}
+                  className="h-40 rounded-lg"
+                  style={{aspectRatio: `${gif.file.sm.gif.width} / ${gif.file.sm.gif.height}`}}
                 />
                 <span
-                  className="text-xs text-gray-500 text-center max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                  className="text-xs text-gray-500 text-center">
                   {gif.title}
                 </span>
               </motion.div>

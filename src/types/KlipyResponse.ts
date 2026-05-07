@@ -1,16 +1,25 @@
 export type KlipyResponse = {
-  next: string;
-  results: KlipyGif[]
+  result: true;
+  data: {
+    data: KlipyGif[];
+  }
 }
 
 export type KlipyGif = {
   id: string;
   title: string;
-  url: string;
-  media_formats: Record<MediaFormats, {
-    url: string;
-    dims: [number, number];
-  }>
+  file: Record<
+    KlipyFileSize,
+    Record<KlipyFileType, KlipyFile>
+  >
 }
 
-type MediaFormats = 'gif' // also others
+type KlipyFileSize = 'sm'
+
+type KlipyFileType = 'gif';
+
+export type KlipyFile = {
+  url: string;
+  width: number;
+  height: number;
+}

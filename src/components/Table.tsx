@@ -3,10 +3,12 @@ import {useEffect, useState} from 'react';
 import {AnimatePresence, motion} from 'motion/react';
 import {Card} from './Card.tsx';
 import type * as Ably from 'ably';
+import type {Card as CardType} from "../types/Card.ts";
+import type {KlipyFile} from "../types/KlipyResponse.ts";
 
 interface VoteEntry {
-  card: string;
-  gifUrl?: string;
+  card: CardType;
+  gif: KlipyFile
 }
 
 function applyHistoryMessage(
@@ -16,8 +18,7 @@ function applyHistoryMessage(
 ): { votes: Record<string, VoteEntry>; revealed: boolean } {
   if (message.name === 'vote') {
     const clientId = message.clientId ?? 'Unknown';
-    const {card, gifUrl} = message.data as { card: string; gifUrl?: string };
-    return {votes: {...votes, [clientId]: {card, gifUrl}}, revealed};
+    return {votes: {...votes, [clientId]: message.data}, revealed};
   }
   if (message.name === 'reveal') return {votes, revealed: true};
   if (message.name === 'reset') return {votes: {}, revealed: false};
@@ -37,8 +38,7 @@ export function Table({room}: { room: string }) {
   const {channel} = useChannel(room, 'vote', (message) => {
     if (!historyLoaded) return; // history replay will handle this
     const clientId = message.clientId ?? 'Unknown';
-    const {card, gifUrl} = message.data as { card: string; gifUrl?: string };
-    setVotes(prev => ({...prev, [clientId]: {card, gifUrl}}));
+    setVotes(prev => ({...prev, [clientId]: message.data}));
   });
 
   useChannel(room, 'reveal', () => {
@@ -89,7 +89,7 @@ export function Table({room}: { room: string }) {
       ) : (
         <div className="flex gap-4 flex-wrap">
           <AnimatePresence>
-            {entries.map(([clientId, {card, gifUrl}]) => (
+            {entries.map(([clientId, {card, gif}]) => (
               <motion.div
                 key={clientId}
                 initial={{opacity: 0, y: 20}}
@@ -98,7 +98,7 @@ export function Table({room}: { room: string }) {
                 transition={{type: 'spring', stiffness: 260, damping: 20}}
                 className="flex flex-col items-center gap-2"
               >
-                <Card label={card} gifUrl={gifUrl} revealed={revealed}/>
+                <Card label={card} gifUrl={gif.url} revealed={revealed}/>
                 <span className="text-xs text-gray-700 font-medium">{nameMap[clientId]}</span>
               </motion.div>
             ))}

@@ -11,6 +11,7 @@ function RoomInner() {
   const { room = '' } = useParams();
   const [selectedCard, setSelectedCard] = useState<Card | undefined>();
   const [selectedGif, setSelectedGif] = useState<KlipyGif | undefined>();
+  const [fetchKey, setFetchKey] = useState(0);
 
   const channel = useChannel(room);
 
@@ -20,6 +21,20 @@ function RoomInner() {
   });
 
   usePresence(room, {status: localStorage.name});
+
+  function selectCard(card: Card) {
+    setSelectedCard(card);
+    setSelectedGif(undefined);
+    setFetchKey(k => k + 1);
+  }
+
+  function selectGif(gif: KlipyGif) {
+    setSelectedGif(gif);
+    channel.publish('vote', {
+      card: selectedCard,
+      gif: gif.file.sm.gif
+    });
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -40,19 +55,14 @@ function RoomInner() {
 
       <CardPicker
         selectedCard={selectedCard}
-        onSelectCard={(card) => {
-          setSelectedCard(card);
-          setSelectedGif(undefined);
-        }}
+        onSelectCard={selectCard}
       />
 
       <GifPicker
         card={selectedCard}
+        fetchKey={fetchKey}
         selectedGif={selectedGif}
-        onSelectGif={(gif) => {
-          setSelectedGif(gif);
-          channel.publish('vote', {card: String(selectedCard), gifUrl: gif.url});
-        }}
+        onSelectGif={selectGif}
       />
 
       <Table room={room}/>
