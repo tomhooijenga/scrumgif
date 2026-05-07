@@ -18,8 +18,6 @@ export function Index() {
     }
   }
 
-  console.log('asdf');
-
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-8">
       <h1 className="text-4xl font-bold text-indigo-600">Planning Poker</h1>
