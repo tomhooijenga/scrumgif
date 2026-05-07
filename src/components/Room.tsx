@@ -63,7 +63,7 @@ function RoomInner() {
 export function Room() {
   const { room = '' } = useParams();
 
-  if (!localStorage.getItem("playerName")) {
+  if (!localStorage.getItem("name")) {
     return <Navigate to={`/name?redirect=/room/${room}`} replace/>;
   }
 

@@ -2,7 +2,7 @@ import {useState} from "react";
 import {useNavigate, useSearchParams} from "react-router";
 
 export function NameEntry() {
-  const [name, setName] = useState(() => localStorage.getItem("playerName") || "");
+  const [name, setName] = useState(() => localStorage.getItem("name") || "");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
@@ -11,7 +11,7 @@ export function NameEntry() {
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return;
-    localStorage.setItem("playerName", trimmed);
+    localStorage.setItem("name", trimmed);
     navigate(redirect);
   };
 
