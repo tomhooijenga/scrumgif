@@ -42,7 +42,7 @@ function RoomInner() {
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen p-6">
       <div className="flex gap-3 mx-6 mb-4">
         <button
           onClick={() => channel.publish('reveal', null)}
@@ -59,6 +59,7 @@ function RoomInner() {
       </div>
 
       <CardPicker
+        className={'container mx-auto'}
         selectedCard={selectedCard}
         onSelectCard={selectCard}
       />

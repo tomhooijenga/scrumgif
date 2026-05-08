@@ -12,6 +12,8 @@ function getRandomPage() {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+const PER_PAGE = 20;
+
 export function GifPicker({
                             card,
                             fetchKey,
@@ -29,7 +31,7 @@ export function GifPicker({
     if (card === undefined) return;
     setGifs([]);
     const controller = new AbortController();
-    fetch(`https://api.klipy.com/api/v1/${import.meta.env.VITE_KLIPY_API_KEY}/gifs/search?q=${encodeURIComponent(card)}&per_page=8&page=${getRandomPage()}`, {signal: controller.signal})
+    fetch(`https://api.klipy.com/api/v1/${import.meta.env.VITE_KLIPY_API_KEY}/gifs/search?q=${encodeURIComponent(card)}&per_page=${PER_PAGE}&page=${getRandomPage()}`, {signal: controller.signal})
       .then(res => res.json() as unknown as KlipyResponse)
       .then(data => setGifs(data.data.data))
       .catch(err => {
@@ -50,7 +52,7 @@ export function GifPicker({
             onClick={() => onSelectGif(gif)}
           >
             <CardShell
-              bg="bg-transparent"
+              className={'h-50'}
               selected={selectedGif?.id === gif.id}
             >
               <CardFaceGif gifUrl={gif.file.sm.gif.url}/>

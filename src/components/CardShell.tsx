@@ -7,7 +7,7 @@ interface CardShellProps extends ComponentPropsWithoutRef<'div'> {
   selected?: boolean;
 }
 
-export function CardShell({bg = 'bg-white', selected, className, children, ...rest}: CardShellProps) {
+export function CardShell({selected, className, children, ...rest}: CardShellProps) {
   const border = selected !== undefined
     ? selected
       ? 'border-2 border-indigo-600 [box-shadow:0px_0px_20px_rgba(79,70,229,0.4),3px_3px_8px_rgba(0,0,0,0.15)]'
@@ -17,8 +17,7 @@ export function CardShell({bg = 'bg-white', selected, className, children, ...re
   return (
     <div
       className={[
-        'h-30 aspect-2.5/3.5 rounded-lg flex items-center justify-center font-bold overflow-hidden relative select-none',
-        bg,
+        'aspect-2.5/3.5 rounded-lg flex items-center justify-center font-bold overflow-hidden relative select-none',
         border,
         className,
       ].filter(Boolean).join(' ')}

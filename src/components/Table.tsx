@@ -1,11 +1,10 @@
 import {useChannel, usePresenceListener} from 'ably/react';
 import {useEffect, useState} from 'react';
-import {AnimatePresence, motion} from 'motion/react';
-import {Card} from './Card.tsx';
+import {motion} from 'motion/react';
+import {Card, CardBack, CardShell} from './Card.tsx';
 import type * as Ably from 'ably';
 import type {Card as CardType} from "../types/Card.ts";
 import type {KlipyFile} from "../types/KlipyResponse.ts";
-import {CardPlaceholder} from "./CardPlaceholder.tsx";
 
 interface VoteEntry {
   card: CardType;
@@ -76,32 +75,23 @@ export function Table({room}: { room: string }) {
   }, []);
 
   return (
-    <motion.div layout className="p-6">
+    <motion.div layout className="container mx-auto">
       <h2 className="text-indigo-600 mb-4 text-xl font-bold">
         Votes
       </h2>
-      <div className="grid gap-0" style={{gridTemplateColumns: `repeat(${players.length}, 1fr)`}}>
-        <AnimatePresence>
-          {players.map(({clientId, data}) => {
-            const vote = votes[clientId];
-            return (
-              <motion.div
-                key={clientId}
-                initial={{opacity: 0, y: 20}}
-                animate={{opacity: 1, y: 0}}
-                exit={{opacity: 0, y: 20}}
-                transition={{type: 'spring', stiffness: 260, damping: 20}}
-                className="flex flex-col items-center gap-2"
-              >
-                {vote
-                  ? <Card label={vote.card} gifUrl={vote.gif.url} revealed={revealed}/>
-                  : <CardPlaceholder className={'h-30'}/>
-                }
-                <span className="text-xs text-gray-700 font-medium">{data.name}</span>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+      <div className="grid gap-4 place-items-center text-center" style={{gridTemplateColumns: `repeat(${players.length}, 1fr)`}}>
+        {players.map(({clientId, data}) => {
+          const vote = votes[clientId];
+          return (
+            <div className={'w-full max-w-50'}>
+              {vote
+                ? <Card label={vote.card} gifUrl={vote.gif.url} revealed={revealed}/>
+                : <CardShell><CardBack /></CardShell>
+              }
+              <span className="text-xs text-gray-700 font-medium">{data.name}</span>
+            </div>
+          );
+        })}
       </div>
     </motion.div>
   );

@@ -27,20 +27,8 @@ interface CardProps extends ComponentPropsWithoutRef<'div'> {
 }
 
 export function Card({label, gifUrl, revealed = true, selected, className, ...rest}: CardProps) {
-  const bg = revealed
-    ? gifUrl
-      ? 'bg-transparent'
-      : 'bg-indigo-50'
-    : gifUrl
-      ? 'bg-transparent'
-      : selected !== undefined
-        ? selected
-          ? 'bg-indigo-50'
-          : 'bg-white'
-        : 'bg-indigo-600';
-
   return (
-    <CardShell bg={bg} selected={selected} className={className} {...rest}>
+    <CardShell selected={selected} className={className} {...rest}>
       {revealed
         ? gifUrl
           ? <CardFaceGif gifUrl={gifUrl}/>
