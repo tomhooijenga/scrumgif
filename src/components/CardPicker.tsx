@@ -10,7 +10,7 @@ export function CardPicker({
                              selectedCard,
                              onSelectCard,
                            }: {
-  className: string | undefined
+  className?: string | undefined
   selectedCard: CardType | undefined;
   onSelectCard: (card: CardType) => void;
 }) {
