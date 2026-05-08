@@ -23,7 +23,7 @@ function RoomInner() {
     setShowGifPicker(false);
   });
 
-  usePresence(room, { name: localStorage.name });
+  usePresence(room, {name: localStorage.name});
 
   function selectCard(card: Card) {
     setSelectedCard(card);
