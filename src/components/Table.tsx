@@ -83,7 +83,7 @@ export function Table({room}: { room: string }) {
         {players.map(({clientId, data}) => {
           const vote = votes[clientId];
           return (
-            <div className={'w-full max-w-50'}>
+            <div key={clientId} className={'w-full max-w-50'}>
               {vote
                 ? <Card label={vote.card} gifUrl={vote.gif.url} revealed={revealed}/>
                 : <CardShell><CardBack /></CardShell>
