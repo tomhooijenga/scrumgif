@@ -41,8 +41,8 @@ export function GifPicker({
   }, [card, fetchKey]);
 
   return (
-    <>
-      <p className="text-gray-500 text-[0.85rem] mb-3">
+    <div>
+      <p className="text-gray-500 text-[0.85rem] mb-3 container mx-auto">
         Click a GIF to confirm your vote.
       </p>
       <CardRow>
@@ -60,6 +60,6 @@ export function GifPicker({
           </CardInteraction>
         ))}
       </CardRow>
-    </>
+    </div>
   );
 }
